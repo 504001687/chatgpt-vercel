@@ -18,7 +18,7 @@ export const defaultEnv = {
     continuousDialogue: true,
     APIModel: "gpt-3.5-turbo" as Model
   },
-  CLIENT_DEFAULT_MESSAGE: `Powered by OpenAI Vercel
+  CLIENT_DEFAULT_MESSAGE: `
 - 如果本项目对你有所帮助，可以给投喂给站主一点小零食，但不接受任何付费功能请求。
 - 本网站仅作为项目演示，不提供服务，请填入自己的 Key，长期使用请联系站主简单成本低。
 - 点击每条消息前的头像，可以锁定对话，作为角色设定。
