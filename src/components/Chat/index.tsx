@@ -26,7 +26,7 @@ export default function () {
     })
     window.setTimeout(() => {
       document.querySelector("#root")?.classList.remove("before")
-    })
+    }, 100)
     document.querySelector("#root")?.classList.add("after")
     loadSession(store.sessionId)
     if (q) sendMessage(q)
@@ -53,14 +53,9 @@ export default function () {
   function archiveCurrentMessage() {
     if (store.currentAssistantMessage) {
       batch(() => {
-        setStore("messageList", k => [
-          ...k,
-          {
-            role: "assistant",
-            content: store.currentAssistantMessage.trim()
-          }
-        ])
+        setStore("messageList", k => k.type === "temporary", "type", "default")
         setStore("currentAssistantMessage", "")
+        setStore("currentMessageToken", 0)
         setStore("loading", false)
       })
       controller = undefined
@@ -194,7 +189,26 @@ export default function () {
           continue
         }
         if (char) {
-          setStore("currentAssistantMessage", k => k + char)
+          batch(() => {
+            if (store.currentAssistantMessage) {
+              setStore(
+                "messageList",
+                k => k.type === "temporary",
+                "content",
+                k => k + char
+              )
+            } else {
+              setStore("messageList", k => [
+                ...k,
+                {
+                  role: "assistant",
+                  content: char,
+                  type: "temporary"
+                }
+              ])
+            }
+            setStore("currentAssistantMessage", k => k + char)
+          })
         }
       }
       done = readerDone
